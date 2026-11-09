@@ -1,0 +1,91 @@
+{
+  "productos": [
+    {
+      "codigo": "BEB001",
+      "nombre": "Coca-Cola 355 ml",
+      "marca": "Coca-Cola",
+      "volumen": "355 ml",
+      "envase": "Lata",
+      "unidadesPorCaja": 24,
+      "stockMinimo": 24,
+      "activo": true,
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "codigo": "BEB002",
+      "nombre": "Coca-Cola 2 L",
+      "marca": "Coca-Cola",
+      "volumen": "2 L",
+      "envase": "Botella plástica",
+      "unidadesPorCaja": 6,
+      "stockMinimo": 12,
+      "activo": true
+    },
+    {
+      "id": "3",
+      "codigo": "BEB003",
+      "nombre": "Sprite 355 ml",
+      "marca": "Sprite",
+      "volumen": "355 ml",
+      "envase": "Lata",
+      "unidadesPorCaja": 24,
+      "stockMinimo": 24,
+      "activo": true
+    },
+    {
+      "id": "4",
+      "codigo": "BEB004",
+      "nombre": "Fanta Naranja 355 ml",
+      "marca": "Fanta",
+      "volumen": "355 ml",
+      "envase": "Lata",
+      "unidadesPorCaja": 24,
+      "stockMinimo": 24,
+      "activo": true
+    },
+    {
+      "codigo": "BEB005",
+      "nombre": "Pepsi 355 ml",
+      "marca": "Pepsi",
+      "volumen": "355 ml",
+      "envase": "Lata",
+      "unidadesPorCaja": 24,
+      "stockMinimo": 12,
+      "activo": true,
+      "id": "b2267964-7289-49d8-819a-17189e4610f9"
+    }
+  ],
+  "movimientos": [
+    {
+      "id": "aa13cd19-7a01-49d4-a087-d7d018d8293c",
+      "productoId": "1",
+      "tipo": "SALIDA",
+      "fecha": "2026-11-09T19:52:57.572Z",
+      "cajas": 2,
+      "unidadesSueltas": 0,
+      "unidadesPorCaja": 24,
+      "cantidadTotal": 48,
+      "observaciones": "Despacho"
+    },
+    {
+      "id": "95b7bd45-9256-4442-bd77-2a9a2dadb66e",
+      "productoId": "1",
+      "tipo": "ENTRADA",
+      "fecha": "2026-11-09T04:44:15.818Z",
+      "cajas": 3,
+      "unidadesSueltas": 0,
+      "unidadesPorCaja": 24,
+      "cantidadTotal": 72,
+      "observaciones": "Recepcion de mercaderia"
+    }
+  ],
+  "configuracion": {
+    "nombreDeposito": "Depósito del Indio",
+    "ubicacion": "Colonia santa Eugenia, Sonsonate Centro, El Salvador",
+    "responsable": "Elvis Masin",
+    "telefono": "+503 24510000",
+    "moneda": "USD",
+    "alertasStock": true
+  }
+}
