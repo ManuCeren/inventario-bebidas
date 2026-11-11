@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
+import datosDemostracion from '../../data/datosDemostracion.json'
 
 import {
   LayoutDashboard,
@@ -12,6 +13,7 @@ import {
   TriangleAlert,
   Settings,
   LogOut,
+  X,
 } from 'lucide-react'
 
 const CONFIG_KEY = 'inventario-bebidas-config-v1'
@@ -36,17 +38,22 @@ function obtenerNombreDeposito(): string {
 
       return (
         configuracion.nombreDeposito?.trim() ||
-        'Depósito de demostración'
+        datosDemostracion.configuracion.nombreDeposito
       )
     }
   } catch {
     // Utilizar el nombre predeterminado.
   }
 
-  return 'Depósito de demostración'
+  return datosDemostracion.configuracion.nombreDeposito
 }
 
-export default function Sidebar() {
+interface SidebarProps {
+  abierto: boolean
+  cerrar: () => void
+}
+
+export default function Sidebar({ abierto, cerrar }: SidebarProps) {
   const location = useLocation()
 
   const [nombreDeposito, setNombreDeposito] = useState(
@@ -74,12 +81,20 @@ export default function Sidebar() {
   }, [])
 
   return (
-    <aside className="flex min-h-screen w-64 shrink-0 flex-col bg-slate-900 text-white">
+    <aside
+      id="menu-inventario"
+      className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-64 max-w-[85vw] flex-col bg-slate-900 text-white shadow-xl transition-transform duration-200 lg:static lg:h-auto lg:min-h-screen lg:translate-x-0 lg:shadow-none ${
+        abierto ? 'translate-x-0' : '-translate-x-full'
+      }`}
+    >
       {/* Información del depósito */}
       <div className="border-b border-slate-700 p-6">
-        <h1 className="text-xl font-bold">
-          Inventario
-        </h1>
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="text-xl font-bold">Inventario</h1>
+          <button type="button" onClick={cerrar} aria-label="Cerrar menú" className="rounded-lg p-2 hover:bg-slate-800 lg:hidden">
+            <X size={20} />
+          </button>
+        </div>
 
         <p
           className="mt-1 break-words text-sm text-slate-400"
@@ -90,12 +105,13 @@ export default function Sidebar() {
       </div>
 
       {/* Menú principal */}
-      <nav className="flex-1 space-y-1 p-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto p-4">
         {menuItems.map(({ name, path, icon: Icon }) => (
           <NavLink
             key={path}
             to={path}
             end={path === '/'}
+            onClick={cerrar}
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-lg px-4 py-3 transition ${
                 isActive

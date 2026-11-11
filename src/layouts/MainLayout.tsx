@@ -8,10 +8,12 @@ import {
   PackageX,
   CheckCircle2,
   X,
+  Menu,
 } from 'lucide-react'
 
 import Sidebar from '../components/layout/Sidebar'
 import { useInventario } from '../context/InventarioContext'
+import datosDemostracion from '../data/datosDemostracion.json'
 
 const CONFIG_KEY = 'inventario-bebidas-config-v1'
 
@@ -22,8 +24,8 @@ interface Configuracion {
 }
 
 const configuracionInicial: Configuracion = {
-  nombreDeposito: 'Depósito de demostración',
-  responsable: 'Administrador',
+  nombreDeposito: datosDemostracion.configuracion.nombreDeposito,
+  responsable: datosDemostracion.configuracion.responsable,
   alertasStock: true,
 }
 
@@ -51,6 +53,8 @@ export default function MainLayout() {
   const [configuracion, setConfiguracion] =
     useState<Configuracion>(obtenerConfiguracion)
 
+  const [menuAbierto, setMenuAbierto] = useState(false)
+
   const [mostrarNotificaciones, setMostrarNotificaciones] =
     useState(false)
 
@@ -64,6 +68,7 @@ export default function MainLayout() {
   // Cerrar notificaciones al navegar.
   useEffect(() => {
     setMostrarNotificaciones(false)
+    setMenuAbierto(false)
   }, [location.pathname])
 
   // Cerrar el panel al hacer clic fuera.
@@ -116,14 +121,32 @@ export default function MainLayout() {
   const alertasHabilitadas = configuracion.alertasStock
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar />
+    <div className="flex min-h-screen min-w-0 bg-slate-50">
+      {menuAbierto && (
+        <button
+          type="button"
+          aria-label="Cerrar menú lateral"
+          className="fixed inset-0 z-40 bg-slate-950/60 lg:hidden"
+          onClick={() => setMenuAbierto(false)}
+        />
+      )}
+      <Sidebar abierto={menuAbierto} cerrar={() => setMenuAbierto(false)} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex min-h-20 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-4 sm:px-8">
+        <header className="flex min-h-16 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3 py-3 sm:px-6 lg:min-h-20 lg:px-8">
+          <button
+            type="button"
+            onClick={() => setMenuAbierto(true)}
+            aria-label="Abrir menú"
+            aria-controls="menu-inventario"
+            aria-expanded={menuAbierto}
+            className="shrink-0 rounded-lg p-2 text-slate-700 hover:bg-slate-100 lg:hidden"
+          >
+            <Menu size={24} />
+          </button>
           {/* Información del sistema */}
           <div className="min-w-0">
-            <h2 className="text-base font-semibold text-slate-800 sm:text-lg">
+            <h2 className="truncate text-sm font-semibold text-slate-800 sm:text-lg">
               Sistema de Gestión de Inventarios
             </h2>
 
@@ -133,7 +156,7 @@ export default function MainLayout() {
           </div>
 
           {/* Usuario y notificaciones */}
-          <div className="flex shrink-0 items-center gap-4 text-slate-600 sm:gap-5">
+          <div className="flex shrink-0 items-center gap-1 text-slate-600 sm:gap-4">
             <div
               className="relative"
               ref={notificacionesRef}
@@ -295,7 +318,7 @@ export default function MainLayout() {
           </div>
         </header>
 
-        <main className="flex-1 p-4 sm:p-8">
+        <main className="min-w-0 flex-1 overflow-x-hidden p-3 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

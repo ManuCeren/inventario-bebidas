@@ -11,6 +11,8 @@ import {
   RotateCcw,
   CheckCircle2,
 } from 'lucide-react'
+import datosDemostracion from '../../data/datosDemostracion.json'
+
 
 const CONFIG_KEY = 'inventario-bebidas-config-v1'
 
@@ -24,12 +26,26 @@ interface ConfiguracionSistema {
 }
 
 const configuracionInicial: ConfiguracionSistema = {
-  nombreDeposito: 'Depósito de demostración',
-  ubicacion: 'Sonsonate Centro, El Salvador',
-  responsable: 'Administrador',
-  telefono: '',
-  moneda: 'USD',
-  alertasStock: true,
+  nombreDeposito:
+    datosDemostracion.configuracion?.nombreDeposito ??
+    'Depósito de demostración',
+
+  ubicacion:
+    datosDemostracion.configuracion?.ubicacion ??
+    'Sonsonate Centro, El Salvador',
+
+  responsable:
+    datosDemostracion.configuracion?.responsable ??
+    'Administrador',
+
+  telefono:
+    datosDemostracion.configuracion?.telefono ?? '',
+
+  moneda:
+    datosDemostracion.configuracion?.moneda ?? 'USD',
+
+  alertasStock:
+    datosDemostracion.configuracion?.alertasStock ?? true,
 }
 
 function cargarConfiguracion(): ConfiguracionSistema {
