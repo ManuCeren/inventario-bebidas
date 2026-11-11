@@ -16,6 +16,8 @@ import { useInventario } from '../context/InventarioContext'
 import datosDemostracion from '../data/datosDemostracion.json'
 
 const CONFIG_KEY = 'inventario-bebidas-config-v1'
+const NOTIFICACIONES_LEIDAS_KEY =
+  'inventario-bebidas-notificaciones-leidas-v1'
 
 interface Configuracion {
   nombreDeposito: string
@@ -57,6 +59,14 @@ export default function MainLayout() {
 
   const [mostrarNotificaciones, setMostrarNotificaciones] =
     useState(false)
+
+  const [alertasRevisadas, setAlertasRevisadas] = useState<string>(() => {
+  try {
+    return localStorage.getItem(NOTIFICACIONES_LEIDAS_KEY) ?? ''
+  } catch {
+    return ''
+  }
+})
 
   const notificacionesRef = useRef<HTMLDivElement>(null)
 
@@ -120,6 +130,44 @@ export default function MainLayout() {
 
   const alertasHabilitadas = configuracion.alertasStock
 
+    // Identificar las alertas actuales del inventario.
+  const firmaAlertas = JSON.stringify(
+    productosConAlerta
+      .map((producto) => ({
+        id: producto.id,
+        estado: producto.estado,
+        stock: producto.stock,
+        stockMinimo: producto.stockMinimo,
+      }))
+      .sort((a, b) => a.id.localeCompare(b.id)),
+  )
+
+  // Comprobar si las alertas actuales ya fueron revisadas.
+  const hayAlertasPendientes =
+    totalAlertas > 0 && firmaAlertas !== alertasRevisadas
+
+  // Marcar las notificaciones actuales como revisadas.
+  function marcarAlertasComoRevisadas() {
+    setAlertasRevisadas(firmaAlertas)
+
+    try {
+      localStorage.setItem(
+        NOTIFICACIONES_LEIDAS_KEY,
+        firmaAlertas,
+      )
+    } catch {
+      // Mantener el estado durante la sesión.
+    }
+  }
+
+  function alternarNotificaciones() {
+    if (!mostrarNotificaciones && alertasHabilitadas) {
+      marcarAlertasComoRevisadas()
+    }
+
+    setMostrarNotificaciones((anterior) => !anterior)
+  }
+
   return (
     <div className="flex min-h-screen min-w-0 bg-slate-50">
       {menuAbierto && (
@@ -163,16 +211,14 @@ export default function MainLayout() {
             >
               <button
                 type="button"
-                onClick={() =>
-                  setMostrarNotificaciones((anterior) => !anterior)
-                }
+                onClick={alternarNotificaciones}
                 className="relative rounded-lg p-2 transition hover:bg-slate-100"
                 aria-label="Ver notificaciones"
                 aria-expanded={mostrarNotificaciones}
               >
                 <Bell size={22} />
 
-                {alertasHabilitadas && totalAlertas > 0 && (
+                {alertasHabilitadas && hayAlertasPendientes && (
                   <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
                     {totalAlertas > 99 ? '99+' : totalAlertas}
                   </span>
